@@ -13,9 +13,10 @@ public class GraphicsProcessing extends JPanel {
     int healthy;
     int infected;
     int sick;
-    boolean isDefaultSettings;
+    int dead;
+    int recovered;
 
-    public GraphicsProcessing(ArrayList<Person> people, ArrayList<Person> removedPeople, int sizeY, int sizeX, int healthy, int infected, int sick, boolean isDefaultSettings) {
+    public GraphicsProcessing(ArrayList<Person> people, ArrayList<Person> removedPeople, int sizeY, int sizeX, int healthy, int infected, int sick, int dead, int recovered) {
         this.people = people;
         this.removedPeople = removedPeople;
         this.sizeY = sizeY;
@@ -23,7 +24,8 @@ public class GraphicsProcessing extends JPanel {
         this.healthy = healthy;
         this.infected = infected;
         this.sick = sick;
-        this.isDefaultSettings = isDefaultSettings;
+        this.dead = dead;
+        this.recovered = recovered;
     }
 
     public void paintComponent(Graphics g) {
@@ -45,7 +47,7 @@ public class GraphicsProcessing extends JPanel {
                 case '8' -> c = Color.yellow;
                 case '!' -> c = Color.red;
                 case 'X' -> c = Color.gray;
-                case ' ' -> c = Color.blue;
+                case 'Y' -> c = Color.pink;
             }
 
             g2d.setColor(c);
@@ -63,15 +65,8 @@ public class GraphicsProcessing extends JPanel {
         statsG2d.drawString("Healthy: " + healthy, 10, sizeY - 50);
         statsG2d.drawString("Infected: " + infected, 10, sizeY - 30);
         statsG2d.drawString("Sick: " + sick, 110, sizeY - 50);
-        statsG2d.drawString("Removed: " + removedPeople.size(), 110, sizeY - 30);
-
-        if (isDefaultSettings) {
-            statsG2d.setColor(c);
-            statsG2d.drawString("Using Default Settings", 210, sizeY - 30);
-        } else {
-            statsG2d.setColor(c);
-            statsG2d.drawString("Using Custom Settings", 225, sizeY - 30);
-        }
+        statsG2d.drawString("Dead: " + dead, 110, sizeY - 30);
+        statsG2d.drawString("Recovered: " + recovered, 210, sizeY - 30);
 
         if (infected + sick == 0) {
             statsG2d.setColor(Color.red);

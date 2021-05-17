@@ -2,26 +2,33 @@ package project;
 import java.util.Random;
 
 public class Person {
-    char status; // 0=healthy, 8=infected, !=sick, X=removed
+    char status; // 0=healthy, 8=infected, !=sick, X=dead, Y=recovered
     int x;
     int y;
     int incubationPeriod;
     int sickPeriod;
+    int mortalityRate; // 0%-100%
     int direction = 6; // 0=up, 1=up-right, 2=right, etc clockwise
     int incubationHours = -1; // -1 means person was never infected
     int sickHours = -1; //    ^
 
-    public Person(char status, int x, int y, int incubationPeriod, int sickPeriod) {
+    public Person(char status, int x, int y, int incubationPeriod, int sickPeriod, int mortalityRate) {
         this.status = status;
         this.x = x;
         this.y = y;
         this.incubationPeriod = incubationPeriod;
         this.sickPeriod = sickPeriod;
+        this.mortalityRate = mortalityRate;
     }
 
-    void infect() { incubationHours = incubationPeriod; }
+    void infect() {
+        Random chance = new Random();
+        incubationHours = incubationPeriod + (chance.nextInt(incubationPeriod / 3) * ((chance.nextBoolean()) ? 1: -1));
+    }
 
     void move(int sizeX, int sizeY) {
+        Random chance = new Random();
+
         // Hours logic
         if (incubationHours > 0) {
             status = '8';
@@ -35,11 +42,12 @@ public class Person {
             status = '!';
             sickHours--;
         } else if (status == '!') {
-            status = 'X';
+            if (chance.nextInt(101) > mortalityRate) {
+                status = 'Y';
+            } else status = 'X';
         }
 
         // Movement Logic
-        Random chance = new Random();
         int choice = chance.nextInt(3);
 
         int checkX = x;
